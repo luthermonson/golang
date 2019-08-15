@@ -8,6 +8,26 @@ platform:
   version: 1903
 
 steps:
+- name: docker-ci
+  image: plugins/docker:windows-1903-amd64
+  settings:
+    dry_run: true
+    context: 1.12/windows/windowsservercore-1903
+    custom_dns: 1.1.1.1
+    dockerfile: 1.12/windows/windowsservercore-1903/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.12-windowsservercore-1903
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
 - name: docker-publish
   image: plugins/docker:windows-1903-amd64
   settings:
@@ -46,6 +66,26 @@ platform:
   version: 1809
 
 steps:
+- name: docker-ci
+  image: plugins/docker:windows-1809-amd64
+  settings:
+    dry_run: true
+    context: 1.12/windows/windowsservercore-1809
+    custom_dns: 1.1.1.1
+    dockerfile: 1.12/windows/windowsservercore-1809/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.12-windowsservercore-1809
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
 - name: docker-publish
   image: plugins/docker:windows-1809-amd64
   settings:

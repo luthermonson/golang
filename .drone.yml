@@ -186,7 +186,7 @@ steps:
   settings:
     password:
       from_secret: docker_password
-    spec: manifest.go114.tmpl
+    spec: manifest-go114.tmpl
     username:
       from_secret: docker_username
   when:
@@ -390,7 +390,7 @@ steps:
   settings:
     password:
       from_secret: docker_password
-    spec: manifest.go113.tmpl
+    spec: manifest-go113.tmpl
     username:
       from_secret: docker_username
   when:
@@ -594,7 +594,7 @@ steps:
   settings:
     password:
       from_secret: docker_password
-    spec: manifest.go112.tmpl
+    spec: manifest-go112.tmpl
     username:
       from_secret: docker_username
   when:

@@ -1,64 +1,6 @@
 ---
 kind: pipeline
-name: default-windows-1903
-
-platform:
-  os: windows
-  arch: amd64
-  version: 1903
-
-steps:
-- name: docker-ci
-  image: plugins/docker:windows-1903-amd64
-  settings:
-    dry_run: true
-    context: 1.14/windows/windowsservercore-1903
-    custom_dns: 1.1.1.1
-    dockerfile: 1.14/windows/windowsservercore-1903/Dockerfile
-    password:
-      from_secret: docker_password
-    repo: rancher/golang
-    tag: 1.14-windowsservercore-1903
-    username:
-      from_secret: docker_username
-  volumes:
-  - name: docker_pipe
-    path: \\\\.\\pipe\\docker_engine
-  when:
-    event:
-    - pull_request
-
-- name: docker-publish
-  image: plugins/docker:windows-1903-amd64
-  settings:
-    context: 1.14/windows/windowsservercore-1903
-    custom_dns: 1.1.1.1
-    dockerfile: 1.14/windows/windowsservercore-1903/Dockerfile
-    password:
-      from_secret: docker_password
-    repo: rancher/golang
-    tag: 1.14-windowsservercore-1903
-    username:
-      from_secret: docker_username
-  volumes:
-  - name: docker_pipe
-    path: \\\\.\\pipe\\docker_engine
-  when:
-    event:
-    - push
-    instance:
-    - drone-publish.rancher.io
-    ref:
-    - refs/heads/master
-
-volumes:
-- name: docker_pipe
-  host:
-    path: \\\\.\\pipe\\docker_engine
-
----
-kind: pipeline
-name: default-windows-1809
+name: windows-go114-1809
 
 platform:
   os: windows
@@ -67,7 +9,7 @@ platform:
 
 steps:
 - name: docker-ci
-  image: plugins/docker:windows-1809-amd64
+  image: plugins/docker
   settings:
     dry_run: true
     context: 1.14/windows/windowsservercore-1809
@@ -87,7 +29,7 @@ steps:
     - pull_request
 
 - name: docker-publish
-  image: plugins/docker:windows-1809-amd64
+  image: plugins/docker
   settings:
     context: 1.14/windows/windowsservercore-1809
     custom_dns: 1.1.1.1
@@ -116,7 +58,123 @@ volumes:
 
 ---
 kind: pipeline
-name: manifests
+name: windows-go114-1903
+
+platform:
+  os: windows
+  arch: amd64
+  version: 1903
+
+steps:
+- name: docker-ci
+  image: plugins/docker
+  settings:
+    dry_run: true
+    context: 1.14/windows/windowsservercore-1903
+    custom_dns: 1.1.1.1
+    dockerfile: 1.14/windows/windowsservercore-1903/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.14-windowsservercore-1903
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
+- name: docker-publish
+  image: plugins/docker
+  settings:
+    context: 1.14/windows/windowsservercore-1903
+    custom_dns: 1.1.1.1
+    dockerfile: 1.14/windows/windowsservercore-1903/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.14-windowsservercore-1903
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+volumes:
+- name: docker_pipe
+  host:
+    path: \\\\.\\pipe\\docker_engine
+
+---
+kind: pipeline
+name: windows-go114-1909
+
+platform:
+  os: windows
+  arch: amd64
+  version: 1909
+
+steps:
+- name: docker-ci
+  image: plugins/docker
+  settings:
+    dry_run: true
+    context: 1.14/windows/windowsservercore-1909
+    custom_dns: 1.1.1.1
+    dockerfile: 1.14/windows/windowsservercore-1909/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.14-windowsservercore-1909
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
+- name: docker-publish
+  image: plugins/docker
+  settings:
+    context: 1.14/windows/windowsservercore-1909
+    custom_dns: 1.1.1.1
+    dockerfile: 1.14/windows/windowsservercore-1909/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.14-windowsservercore-1909
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+volumes:
+- name: docker_pipe
+  host:
+    path: \\\\.\\pipe\\docker_engine
+
+---
+kind: pipeline
+name: manifests-go114
 
 platform:
   os: linux
@@ -124,12 +182,11 @@ platform:
 
 steps:
 - name: push-manifest
-  image: plugins/manifest:1.1.0
+  image: plugins/manifest
   settings:
-    ignore_missing: true
     password:
       from_secret: docker_password
-    spec: manifest.tmpl
+    spec: manifest.go114.tmpl
     username:
       from_secret: docker_username
   when:
@@ -141,5 +198,414 @@ steps:
     - refs/heads/master
 
 depends_on:
-- default-windows-1809
-- default-windows-1903
+- windows-go114-1809
+- windows-go114-1903
+- windows-go114-1909
+
+---
+kind: pipeline
+name: windows-go113-1809
+
+platform:
+  os: windows
+  arch: amd64
+  version: 1809
+
+steps:
+- name: docker-ci
+  image: plugins/docker
+  settings:
+    dry_run: true
+    context: 1.13/windows/windowsservercore-1809
+    custom_dns: 1.1.1.1
+    dockerfile: 1.13/windows/windowsservercore-1809/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.13-windowsservercore-1809
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
+- name: docker-publish
+  image: plugins/docker
+  settings:
+    context: 1.13/windows/windowsservercore-1809
+    custom_dns: 1.1.1.1
+    dockerfile: 1.13/windows/windowsservercore-1809/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.13-windowsservercore-1809
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+volumes:
+- name: docker_pipe
+  host:
+    path: \\\\.\\pipe\\docker_engine
+
+---
+kind: pipeline
+name: windows-go113-1903
+
+platform:
+  os: windows
+  arch: amd64
+  version: 1903
+
+steps:
+- name: docker-ci
+  image: plugins/docker
+  settings:
+    dry_run: true
+    context: 1.13/windows/windowsservercore-1903
+    custom_dns: 1.1.1.1
+    dockerfile: 1.13/windows/windowsservercore-1903/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.13-windowsservercore-1903
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
+- name: docker-publish
+  image: plugins/docker
+  settings:
+    context: 1.13/windows/windowsservercore-1903
+    custom_dns: 1.1.1.1
+    dockerfile: 1.13/windows/windowsservercore-1903/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.13-windowsservercore-1903
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+volumes:
+- name: docker_pipe
+  host:
+    path: \\\\.\\pipe\\docker_engine
+
+---
+kind: pipeline
+name: windows-go113-1909
+
+platform:
+  os: windows
+  arch: amd64
+  version: 1909
+
+steps:
+- name: docker-ci
+  image: plugins/docker
+  settings:
+    dry_run: true
+    context: 1.13/windows/windowsservercore-1909
+    custom_dns: 1.1.1.1
+    dockerfile: 1.13/windows/windowsservercore-1909/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.13-windowsservercore-1909
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
+- name: docker-publish
+  image: plugins/docker
+  settings:
+    context: 1.13/windows/windowsservercore-1909
+    custom_dns: 1.1.1.1
+    dockerfile: 1.13/windows/windowsservercore-1909/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.13-windowsservercore-1909
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+volumes:
+- name: docker_pipe
+  host:
+    path: \\\\.\\pipe\\docker_engine
+
+---
+kind: pipeline
+name: manifests-go113
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: push-manifest
+  image: plugins/manifest
+  settings:
+    password:
+      from_secret: docker_password
+    spec: manifest.go113.tmpl
+    username:
+      from_secret: docker_username
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+depends_on:
+- windows-go113-1809
+- windows-go113-1903
+- windows-go113-1909
+
+---
+kind: pipeline
+name: windows-go112-1809
+
+platform:
+  os: windows
+  arch: amd64
+  version: 1809
+
+steps:
+- name: docker-ci
+  image: plugins/docker
+  settings:
+    dry_run: true
+    context: 1.12/windows/windowsservercore-1809
+    custom_dns: 1.1.1.1
+    dockerfile: 1.12/windows/windowsservercore-1809/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.12-windowsservercore-1809
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
+- name: docker-publish
+  image: plugins/docker
+  settings:
+    context: 1.12/windows/windowsservercore-1809
+    custom_dns: 1.1.1.1
+    dockerfile: 1.12/windows/windowsservercore-1809/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.12-windowsservercore-1809
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+volumes:
+- name: docker_pipe
+  host:
+    path: \\\\.\\pipe\\docker_engine
+
+---
+kind: pipeline
+name: windows-go112-1903
+
+platform:
+  os: windows
+  arch: amd64
+  version: 1903
+
+steps:
+- name: docker-ci
+  image: plugins/docker
+  settings:
+    dry_run: true
+    context: 1.12/windows/windowsservercore-1903
+    custom_dns: 1.1.1.1
+    dockerfile: 1.12/windows/windowsservercore-1903/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.12-windowsservercore-1903
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
+- name: docker-publish
+  image: plugins/docker
+  settings:
+    context: 1.12/windows/windowsservercore-1903
+    custom_dns: 1.1.1.1
+    dockerfile: 1.12/windows/windowsservercore-1903/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.12-windowsservercore-1903
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+volumes:
+- name: docker_pipe
+  host:
+    path: \\\\.\\pipe\\docker_engine
+
+---
+kind: pipeline
+name: windows-go112-1909
+
+platform:
+  os: windows
+  arch: amd64
+  version: 1909
+
+steps:
+- name: docker-ci
+  image: plugins/docker
+  settings:
+    dry_run: true
+    context: 1.12/windows/windowsservercore-1909
+    custom_dns: 1.1.1.1
+    dockerfile: 1.12/windows/windowsservercore-1909/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.12-windowsservercore-1909
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - pull_request
+
+- name: docker-publish
+  image: plugins/docker
+  settings:
+    context: 1.12/windows/windowsservercore-1909
+    custom_dns: 1.1.1.1
+    dockerfile: 1.12/windows/windowsservercore-1909/Dockerfile
+    password:
+      from_secret: docker_password
+    repo: rancher/golang
+    tag: 1.12-windowsservercore-1909
+    username:
+      from_secret: docker_username
+  volumes:
+  - name: docker_pipe
+    path: \\\\.\\pipe\\docker_engine
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+volumes:
+- name: docker_pipe
+  host:
+    path: \\\\.\\pipe\\docker_engine
+
+---
+kind: pipeline
+name: manifests-go112
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: push-manifest
+  image: plugins/manifest
+  settings:
+    password:
+      from_secret: docker_password
+    spec: manifest.go112.tmpl
+    username:
+      from_secret: docker_username
+  when:
+    event:
+    - push
+    instance:
+    - drone-publish.rancher.io
+    ref:
+    - refs/heads/master
+
+depends_on:
+- windows-go112-1809
+- windows-go112-1903
+- windows-go112-1909

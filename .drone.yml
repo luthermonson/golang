@@ -171,6 +171,69 @@ volumes:
 - name: docker_pipe
   host:
     path: \\\\.\\pipe\\docker_engine
+---
+kind: pipeline
+name: windows-go114-2004
+
+platform:
+  os: windows
+  arch: amd64
+  version: 2004
+
+# remove this and use upstream images when https://github.com/drone/drone-git/pull/25 is merged
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: luthermonson/drone-git:windows-2004-amd64
+  - name: docker-ci
+    image: luthermonson/drone-docker:2004
+    settings:
+      dry_run: true
+      context: 1.14/windows/windowsservercore-2004
+      custom_dns: 1.1.1.1
+      dockerfile: 1.14/windows/windowsservercore-2004/Dockerfile
+      password:
+        from_secret: docker_password
+      repo: rancher/golang
+      tag: 1.14-windowsservercore-2004
+      username:
+        from_secret: docker_username
+    volumes:
+      - name: docker_pipe
+        path: \\\\.\\pipe\\docker_engine
+    when:
+      event:
+        - pull_request
+
+  - name: docker-publish
+    image: luthermonson/drone-docker:2004
+    settings:
+      context: 1.14/windows/windowsservercore-2004
+      custom_dns: 1.1.1.1
+      dockerfile: 1.14/windows/windowsservercore-2004/Dockerfile
+      password:
+        from_secret: docker_password
+      repo: rancher/golang
+      tag: 1.14-windowsservercore-2004
+      username:
+        from_secret: docker_username
+    volumes:
+      - name: docker_pipe
+        path: \\\\.\\pipe\\docker_engine
+    when:
+      event:
+        - push
+      instance:
+        - drone-publish.rancher.io
+      ref:
+        - refs/heads/master
+
+volumes:
+  - name: docker_pipe
+    host:
+      path: \\\\.\\pipe\\docker_engine
 
 ---
 kind: pipeline
@@ -201,6 +264,7 @@ depends_on:
 - windows-go114-1809
 - windows-go114-1903
 - windows-go114-1909
+- windows-go114-2004
 
 ---
 kind: pipeline
@@ -378,6 +442,69 @@ volumes:
 
 ---
 kind: pipeline
+name: windows-go113-2004
+
+platform:
+  os: windows
+  arch: amd64
+  version: 2004
+
+# remove this and use upstream images when https://github.com/drone/drone-git/pull/25 is merged
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: luthermonson/drone-git:windows-2004-amd64
+  - name: docker-ci
+    image: luthermonson/drone-docker:2004
+    settings:
+      dry_run: true
+      context: 1.13/windows/windowsservercore-2004
+      custom_dns: 1.1.1.1
+      dockerfile: 1.13/windows/windowsservercore-2004/Dockerfile
+      password:
+        from_secret: docker_password
+      repo: rancher/golang
+      tag: 1.13-windowsservercore-2004
+      username:
+        from_secret: docker_username
+    volumes:
+      - name: docker_pipe
+        path: \\\\.\\pipe\\docker_engine
+    when:
+      event:
+        - pull_request
+
+  - name: docker-publish
+    image: luthermonson/drone-docker:2004
+    settings:
+      context: 1.13/windows/windowsservercore-2004
+      custom_dns: 1.1.1.1
+      dockerfile: 1.13/windows/windowsservercore-2004/Dockerfile
+      password:
+        from_secret: docker_password
+      repo: rancher/golang
+      tag: 1.13-windowsservercore-2004
+      username:
+        from_secret: docker_username
+    volumes:
+      - name: docker_pipe
+        path: \\\\.\\pipe\\docker_engine
+    when:
+      event:
+        - push
+      instance:
+        - drone-publish.rancher.io
+      ref:
+        - refs/heads/master
+
+volumes:
+  - name: docker_pipe
+    host:
+      path: \\\\.\\pipe\\docker_engine
+---
+kind: pipeline
 name: manifests-go113
 
 platform:
@@ -405,6 +532,7 @@ depends_on:
 - windows-go113-1809
 - windows-go113-1903
 - windows-go113-1909
+- windows-go113-2004
 
 ---
 kind: pipeline
@@ -579,7 +707,69 @@ volumes:
 - name: docker_pipe
   host:
     path: \\\\.\\pipe\\docker_engine
+---
+kind: pipeline
+name: windows-go112-2004
 
+platform:
+  os: windows
+  arch: amd64
+  version: 2004
+
+# remove this and use upstream images when https://github.com/drone/drone-git/pull/25 is merged
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: luthermonson/drone-git:windows-2004-amd64
+  - name: docker-ci
+    image: luthermonson/drone-docker:2004
+    settings:
+      dry_run: true
+      context: 1.12/windows/windowsservercore-2004
+      custom_dns: 1.1.1.1
+      dockerfile: 1.12/windows/windowsservercore-2004/Dockerfile
+      password:
+        from_secret: docker_password
+      repo: rancher/golang
+      tag: 1.12-windowsservercore-2004
+      username:
+        from_secret: docker_username
+    volumes:
+      - name: docker_pipe
+        path: \\\\.\\pipe\\docker_engine
+    when:
+      event:
+        - pull_request
+
+  - name: docker-publish
+    image: luthermonson/drone-docker:2004
+    settings:
+      context: 1.12/windows/windowsservercore-2004
+      custom_dns: 1.1.1.1
+      dockerfile: 1.12/windows/windowsservercore-2004/Dockerfile
+      password:
+        from_secret: docker_password
+      repo: rancher/golang
+      tag: 1.12-windowsservercore-2004
+      username:
+        from_secret: docker_username
+    volumes:
+      - name: docker_pipe
+        path: \\\\.\\pipe\\docker_engine
+    when:
+      event:
+        - push
+      instance:
+        - drone-publish.rancher.io
+      ref:
+        - refs/heads/master
+
+volumes:
+  - name: docker_pipe
+    host:
+      path: \\\\.\\pipe\\docker_engine
 ---
 kind: pipeline
 name: manifests-go112
@@ -609,3 +799,4 @@ depends_on:
 - windows-go112-1809
 - windows-go112-1903
 - windows-go112-1909
+- windows-go112-2004

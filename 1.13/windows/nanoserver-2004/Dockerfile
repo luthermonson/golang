@@ -14,9 +14,9 @@ RUN setx /m PATH "%GOPATH%\bin;C:\go\bin;%PATH%"
 USER ContainerUser
 # doing this first to share cache across versions more aggressively
 
-ENV GOLANG_VERSION 1.14
+ENV GOLANG_VERSION 1.13.8
 
-COPY --from=golang:1.14-windowsservercore-2004 C:\\go C:\\go
+COPY --from=golang:1.13.8-windowsservercore-2004 C:\\go C:\\go
 RUN go version
 
 WORKDIR $GOPATH

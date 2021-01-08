@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/nanoserver:2004
+FROM mcr.microsoft.com/windows/nanoserver:1909
 
 SHELL ["cmd", "/S", "/C"]
 
@@ -16,7 +16,7 @@ USER ContainerUser
 
 ENV GOLANG_VERSION 1.14
 
-COPY --from=golang:1.14-windowsservercore-2004 C:\\go C:\\go
+COPY --from=golang:1.14-windowsservercore-1909 C:\\go C:\\go
 RUN go version
 
 WORKDIR $GOPATH
